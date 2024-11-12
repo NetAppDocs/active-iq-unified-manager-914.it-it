@@ -1,0 +1,114 @@
+---
+permalink: config/task_add_space_to_data_directory_of_um_linux_host.html 
+sidebar: sidebar 
+keywords: add, space, data directory, linux, host 
+summary: 'Se nella directory era stato allocato spazio su disco insufficiente `/opt/netapp/data` per supportare Unified Manager quando era stato originariamente configurato l"host Linux e quindi installato Unified Manager, è possibile aggiungere spazio su disco dopo l"installazione aumentando lo spazio su disco nella `/opt/netapp/data` directory.' 
+---
+= Aggiunta di spazio alla directory dei dati dell'host Linux
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se nella directory era stato allocato spazio su disco insufficiente `/opt/netapp/data` per supportare Unified Manager quando era stato originariamente configurato l'host Linux e quindi installato Unified Manager, è possibile aggiungere spazio su disco dopo l'installazione aumentando lo spazio su disco nella `/opt/netapp/data` directory.
+
+*Cosa ti serve*
+
+È necessario disporre dell'accesso utente root alla macchina Red Hat Enterprise Linux o CentOS Linux su cui è installato Unified Manager.
+
+Si consiglia di eseguire il backup del database di Unified Manager prima di aumentare le dimensioni della directory dei dati.
+
+.Fasi
+. Accedere come utente root alla macchina Linux su cui si desidera aggiungere spazio su disco.
+. Arrestare il servizio Unified Manager e il software MySQL associato nell'ordine indicato:
++
+`systemctl stop ocieau ocie mysqld`
+
+. Creare una cartella di backup temporaneo (ad esempio, `/backup-data`) con spazio su disco sufficiente per contenere i dati nella directory corrente `/opt/netapp/data`.
+. Copiare il contenuto e la configurazione dei privilegi della directory esistente `/opt/netapp/data` nella directory dei dati di backup:
++
+`cp -arp /opt/netapp/data/* /backup-data`
+
+. Se Linux è attivato:
++
+.. Ottenere il tipo se Linux per le cartelle nella cartella esistente `/opt/netapp/data`:
++
+`se_type= ls -Z /opt/netapp/data | awk '{print $4}' | awk -F: '{print $3}' | head -1`
+
++
+Il sistema restituisce una conferma simile a quanto segue:
+
++
+[listing]
+----
+echo $se_type
+mysqld_db_t
+----
+.. Eseguire il comando chcon per impostare il tipo di se Linux per la directory di backup:
++
+`chcon -R --type=mysqld_db_t /backup-data`
+
+
+
+. Rimuovere il contenuto della `/opt/netapp/data` directory:
++
+.. `cd /opt/netapp/data`
+.. `rm -rf *`
+
+
+. Espandere la dimensione della `/opt/netapp/data` directory ad un minimo di 150 GB tramite i comandi LVM o aggiungendo dischi aggiuntivi.
++
+[NOTE]
+====
+Se è stato creato `/opt/netapp/data` da un disco, non provare a eseguire il montaggio `/opt/netapp/data` come condivisione NFS o CIFS. Poiché, in questo caso, se si tenta di espandere lo spazio su disco, alcuni comandi LVM, come `resize` e `extend`, potrebbero non funzionare come previsto.
+
+====
+. Verificare che il proprietario della directory (mysql) e il `/opt/netapp/data` gruppo (root) siano invariati:
++
+`ls -ltr /opt/netapp/ | grep data`
+
++
+Il sistema restituisce una conferma simile a quanto segue:
+
++
+[listing]
+----
+drwxr-xr-x.  17 mysql root  4096 Aug 28 13:08 data
+----
+. Se Linux è attivato, confermare che il contesto per la `/opt/netapp/data` directory sia ancora impostato su mysqld_db_t:
++
+.. `touch /opt/netapp/data/abc`
+.. `ls -Z /opt/netapp/data/abc`
++
+Il sistema restituisce una conferma simile a quanto segue:
+
++
+[listing]
+----
+-rw-r--r--. root root unconfined_u:object_r:mysqld_db_t:s0 /opt/netapp/data/abc
+----
+
+
+. Eliminare il file abc in modo che questo file estraneo non causi un errore di database in futuro.
+. Copiare di nuovo il contenuto dei dati di backup nella directory espansa `/opt/netapp/data`:
++
+`cp -arp /backup-data/* /opt/netapp/data/`
+
+. Se Linux è attivato, eseguire il seguente comando:
++
+`chcon -R --type=mysqld_db_t /opt/netapp/data`
+
+. Avviare il servizio MySQL:
++
+`systemctl start mysqld`
+
+. Una volta avviato il servizio MySQL, avviare i servizi ocie e ocieau nell'ordine indicato:
++
+`systemctl start ocie ocieau`
+
+. Dopo aver avviato tutti i servizi, eliminare la cartella di backup `/backup-data` :
++
+`rm -rf /backup-data`
+
+

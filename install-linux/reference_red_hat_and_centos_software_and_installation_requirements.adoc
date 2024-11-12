@@ -1,0 +1,113 @@
+---
+permalink: install-linux/reference_red_hat_and_centos_software_and_installation_requirements.html 
+sidebar: sidebar 
+keywords: linux software, installation requirements, system, authorization,  requirements 
+summary: Il sistema Linux su cui si installa Unified Manager richiede versioni specifiche del sistema operativo e del software di supporto. 
+---
+= Software Linux e requisiti di installazione
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Il sistema Linux su cui si installa Unified Manager richiede versioni specifiche del sistema operativo e del software di supporto.
+
+
+
+== Software del sistema operativo
+
+Il sistema Linux deve disporre delle seguenti versioni del sistema operativo e del software di supporto installati:
+
+* Red Hat Enterprise Linux versioni 7.x e da 8,0 a 8,9, basato sull'architettura x86_64.
+* CentOS versione 7.x basato sull'architettura x86_64. CentOS Stream non è supportato.
+
+
+Consulta la matrice di interoperabilità per l'elenco completo e aggiornato delle versioni supportate di Red Hat Enterprise Linux e CentOS.
+
+http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"^]
+
+Il server deve essere dedicato all'esecuzione di Unified Manager. Sul server non devono essere installate altre applicazioni. È possibile che uno scanner per vulnerabilità come Qualys sia installato sul sistema Linux a causa delle normative aziendali. È necessario disattivare il programma di scansione delle vulnerabilità prima di installare Unified Manager per evitare errori nell'installazione.
+
+
+NOTE: Gli scanner per vulnerabilità (come Qualys) possono comportare un elevato utilizzo della CPU durante la scansione della macchina virtuale (VM) sia internamente (dove Unified Manager e lo scanner per vulnerabilità sono installati sulla stessa macchina virtuale) che esternamente (dove Unified Manager e lo scanner per la vulnerabilità sono installati su due server diversi e lo scanner per la vulnerabilità analizza la VM in cui è installato Unified Manager). Questo problema spesso causa una mancata risposta della macchina virtuale e influisce sui servizi di Unified Manager. Pertanto, NetApp consiglia di disattivare lo scanner per vulnerabilità nella macchina virtuale in cui è installato Unified Manager. Se la disattivazione dello scanner non è un'opzione, eseguire la scansione della VM durante le ore non lavorative e riavviare i servizi al termine della scansione.
+
+
+
+== Software di terze parti
+
+Unified Manager viene implementato su un server Web WildFly. WildFly 26.1.3 viene fornito in bundle e configurato con Unified Manager.
+
+I seguenti pacchetti di terze parti sono richiesti, ma non sono inclusi in Unified Manager. Questi pacchetti vengono installati automaticamente dal `yum` programma di installazione durante l'installazione, a condizione che i repository siano stati configurati come indicato nelle sezioni seguenti.
+
+* MySQL Community Edition versione 8.0.34 (dal repository MySQL).
+* OpenJDK versione 11.0.21 (dall'archivio Red Hat Extra Enterprise Linux Server)
+* Python 3,6.x
+* P7zip versione 16.02 o successiva (dal repository Red Hat Extra Packages per Enterprise Linux)
+
+
+[NOTE]
+====
+Prima di aggiornare qualsiasi software di terze parti, è necessario chiudere un'istanza di Unified Manager in esecuzione. Una volta completata l'installazione del software di terze parti, è possibile riavviare Unified Manager.
+
+====
+
+
+== Requisiti di autorizzazione dell'utente
+
+L'installazione di Unified Manager su un sistema Linux può essere eseguita dall'utente root o da utenti non root utilizzando il `sudo` comando.
+
+
+
+== Requisiti di installazione
+
+Di seguito sono elencate le Best practice per l'installazione di Red Hat Enterprise Linux o CentOS e dei repository associati al sistema. I sistemi installati o configurati in modo diverso o implementati fuori sede (nel cloud) potrebbero richiedere ulteriori passaggi e Unified Manager potrebbe non funzionare correttamente in tali implementazioni.
+
+* È necessario installare Red Hat Enterprise Linux o CentOS in base alle Best practice di Red Hat e selezionare le seguenti opzioni predefinite, che richiedono la selezione dell'ambiente di base "`Sserver with GUI`".
+* Durante l'installazione di Unified Manager su Red Hat Enterprise Linux o CentOS, il sistema deve avere accesso al repository appropriato in modo che il programma di installazione possa accedere e installare tutte le dipendenze software richieste.
+* Affinché l' `yum`installatore trovi software dipendente nei repository di Red Hat Enterprise Linux, è necessario aver registrato il sistema durante l'installazione di Red Hat Enterprise Linux o successivamente utilizzando un abbonamento Red Hat valido.
++
+Per informazioni su Red Hat Subscription Manager, consulta la documentazione di Red Hat.
+
+* È necessario abilitare il repository Extra Packages for Enterprise Linux (EPEL) per installare correttamente le utility di terze parti richieste nel sistema.
++
+Se il repository EPEL non è configurato sul sistema, è necessario scaricare e configurare manualmente il repository.
+
++
+Vedere link:task_manually_configure_epel_repository.html["Configurazione manuale del repository EPEL"].
+
+* Se la versione corretta di MySQL non è installata, devi abilitare il repository MySQL per installare correttamente il software MySQL sul tuo sistema.
++
+Se il repository MySQL non è configurato sul sistema, è necessario scaricare e configurare manualmente il repository.
+
++
+Vedere link:task_manually_configure_mysql_repository.html["Configurazione manuale del repository MySQL"].
+
+
+
+Se il sistema non dispone di accesso a Internet e i repository non vengono mirrorati da un sistema connesso a Internet al sistema non connesso, seguire le istruzioni di installazione per determinare le dipendenze software esterne del sistema. Quindi, è possibile scaricare il software richiesto sul sistema connesso a Internet e copiare i `.rpm` file nel sistema in cui si intende installare Unified Manager. Per scaricare gli artefatti e i pacchetti, è necessario utilizzare il `yum install` comando. È necessario assicurarsi che i due sistemi eseguano la stessa versione del sistema operativo e che la licenza di abbonamento sia per la versione appropriata di Red Hat Enterprise Linux o CentOS.
+
+[NOTE]
+====
+Non è necessario installare il software di terze parti richiesto da repository diversi da quelli elencati qui. Il software installato dai repository Red Hat è progettato esplicitamente per Red Hat Enterprise Linux e conforme alle Best practice Red Hat (layout di directory, permessi e così via). Il software di altre sedi potrebbe non seguire queste linee guida, il che potrebbe causare un errore nell'installazione di Unified Manager o problemi con aggiornamenti futuri.
+
+====
+
+
+== Requisito della porta 443
+
+Le immagini generiche di Red Hat Enterprise Linux e CentOS potrebbero bloccare l'accesso esterno alla porta 443. A causa di questa restrizione, potrebbe non essere possibile connettersi all'interfaccia utente Web dell'amministratore dopo l'installazione di Unified Manager. L'esecuzione del seguente comando consente l'accesso alla porta 443 per tutti gli utenti esterni e le applicazioni su un sistema generico Red Hat Enterprise Linux o CentOS.
+
+`# firewall-cmd --zone=public --add-port=443/tcp --permanent; firewall-cmd --reload`
+
+È necessario installare Red Hat Enterprise Linux e CentOS con l'ambiente di base "`Server with GUI`". Fornisce i comandi utilizzati dalle istruzioni di installazione di Unified Manager. Altri ambienti di base potrebbero richiedere l'installazione di comandi aggiuntivi per validare o completare l'installazione. Se `firewall-cmd` non è disponibile sul sistema, è necessario installarlo eseguendo il seguente comando:
+
+`# sudo yum install firewalld`
+
+Prima di eseguire i comandi, contattare il reparto IT per verificare se le policy di sicurezza richiedono una procedura diversa.
+
+[NOTE]
+====
+Il THP (transparent enorme Pages) deve essere disattivato sui sistemi CentOS e Red Hat. Se attivata, in alcuni casi può causare l'arresto di Unified Manager quando alcuni processi consumano una quantità eccessiva di memoria e vengono terminati.
+
+====

@@ -15,4 +15,4 @@ Active IQ Unified Manager offre API REST per visualizzare le informazioni relati
 
 È inoltre possibile eseguire API ONTAP su tutti i cluster gestiti da ONTAP utilizzando il gateway API supportato da Unified Manager.
 
-Per informazioni sulle API REST di Unified Manager, vedere link:../api-automation/concept_get_started_with_um_apis.html["Introduzione alle API REST di Active IQ Unified Manager"].
+Per informazioni sulle API REST di Unified Manager, vederelink:../api-automation/concept_get_started_with_um_apis.html["Inizia con le API REST Active IQ Unified Manager"] .

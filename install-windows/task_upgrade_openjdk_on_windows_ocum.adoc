@@ -27,7 +27,7 @@ Ad esempio, scaricare `jdk-11.0.18_windows-x64_bin.zip from https://www.oracle.c
 
 +
 
-NOTE: Per scaricare il file è necessario un account Oracle. Se non si dispone di un account Oracle, andare alla link:https://login.oracle.com/mysso/signon.jsp?request_id=007["Accesso all'account Oracle"] pagina per crearne uno.
+NOTE: Per scaricare il file è necessario un account Oracle. Se non si dispone di un account Oracle, visitare la link:https://signon.oracle.com/signin["Accesso all'account Oracle"^] page per crearne uno.
 
 . Utilizzare la console dei servizi Windows per arrestare i seguenti servizi di Unified Manager:
 +

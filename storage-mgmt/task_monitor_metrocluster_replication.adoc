@@ -29,7 +29,7 @@ Per le configurazioni MetroCluster over IP, lo stato della replica dei dati vien
 * *Protezione* > *relazioni* > *relazione: Vista MetroCluster*
 
 
-Per informazioni, vedere link:../storage-mgmt/task_monitor_metrocluster_configurations.html#monitor-connectivity-issues-in-metrocluster-over-ip["Monitorare i problemi di connettività in MetroCluster over IP"].
+Per informazioni, vedi link:../storage-mgmt/task_monitor_metrocluster_configurations.html#monitor-connectivity-issues-in-metrocluster-over-ip-configuration["Monitorare i problemi di connettività in MetroCluster over IP"].
 
 
 

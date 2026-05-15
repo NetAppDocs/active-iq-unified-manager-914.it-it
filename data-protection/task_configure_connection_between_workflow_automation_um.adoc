@@ -19,7 +19,7 @@ summary: 'È possibile configurare una connessione sicura tra OnCommand Workflow
 +
 [NOTE]
 ====
-Il pacchetto ""Wfa pack for Manage Clustered Data ONTAP"" è incluso in Wfa 5,1, pertanto non è necessario scaricare questo pacchetto dall'archivio per l'automazione dello storage NetApp e installarlo separatamente sul server Wfa, come richiesto in passato.  https://automationstore.netapp.com/pack-list.shtml["PACCHETTO WFA per la gestione di ONTAP"]
+Il "pacchetto WFA per la gestione di Clustered Data ONTAP" è incluso in WFA 5.1, quindi non è necessario scaricare questo pacchetto dal NetAppStorage Automation Store e installarlo separatamente sul server WFA come richiesto in passato. https://mysupport.netapp.com/site/products/all/details/ocwfa/downloads-tab["Download WFA"^]
 
 ====
 * Per supportare le connessioni WFA e Unified Manager, è necessario disporre del nome dell'utente del database creato in Unified Manager.
